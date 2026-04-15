@@ -38,6 +38,9 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/ml-explore/mlx-swift", .upToNextMinor(from: "0.31.3")),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0-latest"),
+        // Test-only: needed for the standalone Gemma4 E2E test that uses
+        // #huggingFaceTokenizerLoader() to load a real Hugging Face tokenizer.
+        .package(url: "https://github.com/huggingface/swift-transformers", from: "1.2.0"),
     ],
     targets: [
         .target(
@@ -123,6 +126,8 @@ let package = Package(
                 "MLXLLM",
                 "MLXVLM",
                 "MLXEmbedders",
+                "MLXHuggingFace",
+                .product(name: "Tokenizers", package: "swift-transformers"),
             ],
             path: "Tests/MLXLMTests",
             exclude: [
@@ -135,6 +140,7 @@ let package = Package(
                 .process("Fixtures/gemma4_mel_alignment.json"),
                 .process("Fixtures/gemma4_token_alignment.json"),
                 .process("Fixtures/gemma4_e2e_reference.json"),
+                .process("Fixtures/gemma4_e2e_audio.json"),
             ]
         ),
         .macro(
